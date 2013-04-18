@@ -1,0 +1,18 @@
+下载稳定版本
+
+    最新版本是0.9.5-travelsky
+
+    可以从{{{http://www.baidu.com}这里}}下载
+
+    依赖库可以从{{{/dependencies.html}这里}}找到
+
+    如果要使用JMX特性,需要添加以下的依赖库:
+
+    * mx4j-jmx 2.1.1
+
+    * mx4j-impl 2.1.1
+
+Maven用户
+
+    如果
+

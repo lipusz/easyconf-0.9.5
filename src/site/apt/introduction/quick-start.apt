@@ -1,0 +1,95 @@
+快速上手
+
+    这篇快速指南引导读者如何使用EasyConf解决一些简单的配置问题。我们的目标是让使用EasyConf的程序跑起来并证明是多么简单的。
+    在{{{/user-guide/introduction.html}用户手册}}中，你会找到更多更详细的说明。
+
+从一个问题开始
+
+    假设你正在开发一个应用程序，并且需要使用一个值，但这个值在将来某个时间可能发生变化。
+    举个例子，你正在开发一个汇率转换程序，显然你需要设定一些汇率值，比如欧元对美元的汇率。你当然可以将这些汇率值硬编码到程序中，就像下面的代码片段：
+
++----
+  public static final double EURO_TO_DOLLARS_RATIO = 1.2;  // 设定欧元对美元的汇率
+  /**
+  * 根据汇率，将欧元转换为美元
+  */
+  public double toDollars(double euros) {
+      return euros/EURO_TO_DOLLARS_RATIO;
+  }
++----
+
+    显然，硬编码使程序失去灵活性，因为当需要修改这些值时，你需要重新编译程序。最好的方法是把汇率值放在一个属性文件（*.properties).
+    但熟悉Java的程序员知道，属性文件被读取后会放在一个映射表(Map）中，而且键值都是字符串类型，我们通常需要把它转换成其他数据类型。
+    在这个例子中，我们就需要将它转换成浮点数类型。EasyConf为我们省去了这些麻烦．
+
+简单解决办法
+
+    我们把刚才的代码改成如下所示：
+
++----
+    public static final double EURO_TO_DOLLARS_RATIO = EasyConf.getConfiguration("calculator").getProperties().getDouble("euro-to-dollars");
+
+    public double toDollars(double euros) {
+        return euros/EURO_TO_DOLLARS_RATIO;
+    }
++----
+
+    并在类路径下创建一个<<<calculator.properties>>>文件
+
++----
+   euro-to-dollars=1.2
++----
+
+    这里我们注意到，<EURO_TO_DOLLARS_RATIO>的值是通过EasyConf从<<<calculator.properties>>>读取的,并且通过<getDouble>转换成浮点数类型了。
+
+分析
+
+    在这个简单的例子中，EasyConf为我们解决了如下的问题：
+
+    * 你不需要将配置文件硬编码在代码中。在上面的例子中，我们只需提供<calculator>这个名字，EasyConf会自动匹配<<<calculator.properties>>>.
+    这样你可以针对不同的环境提供不同的配置，比如在测试环境中，EasyConf会匹配<<<calculator.test.properties>>>
+
+    * EasyConf会从{{{/reference/file-search.html}多个地方}}尝试读取配置文件。
+
+    * EasyConf提供了数据类型转换的接口, 如果发生类型转换错误，则抛出<ConversionException>异常
+
+    * You can read the value in a single line. Yes I know it looks like a complicated line for this simple example, but that makes it possible to add more complex configuration later.
+
+添加更多属性
+
+    下面向<<<calculator.properties>>>添加其他属性：
+
++----
+   ## 欧元对美元的汇率
+   euro-to-dollars=1.2
+   ## 支持的货币
+   supported-currencies=${trusted-currencies},pound
+   ## 信任的货币
+   trusted-currencies=dollar,euro
+   ## 是否允许转换
+   conversion-allowed=true
++----
+
+    并修改代码:
+
++---
+    public static final double  EURO_TO_DOLLARS_RATIO = getProperties().getDouble("euro-to-dollars");
+      	  public static final String[]    SUPPORTED_CURRENCIES  =      	  	getProperties().getStringArray("supported-currencies");
+      	  public static final String[]    TRUSTED_CURRENCIES    =
+      	  	getProperties().getStringArray("trusted-currencies");
+      	  public static final boolean CONVERSION_ALLOWED    =
+      	  	getProperties().getBoolean("conversion-allowed");
+
+      	  private static ComponentProperties getProperties(double euros) {
+      	     return Easyconf.getConfiguration("calculator").getProperties();
+      	  }
++---
+
+    这里演示了EasyConf的类型转换和变量替换功能。要想知道EasyConf支持哪些类型，请看{{{/reference/property-types.html}这里}}
+
+
+为不同的公司/组织提供不同的配置
+
+
+
+

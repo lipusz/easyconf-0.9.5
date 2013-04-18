@@ -1,0 +1,31 @@
+What is EasyConf?
+
+    EasyConf is a library to access configuration of software components and applications. It defines simple conventions to
+    make it easier to use. It was born in a portlets-based portal and has several features useful for this and similar environments.
+
+    EasyConf aims to make easy the development of highly configurable Java applications. You can start with a very simple
+    scheme and when you need it you'll be able to add powerful functionality such as XML files, support for several environments or aggregation of componentes.
+
+State
+
+    EasyConf is stable and production ready. It is being used in several production environments without any known bugs.
+    EasyConf is based on several {{{/dependencies.html}external libraries}} which are also stable.
+
+Main features
+
+    The key features of EasyConf are:
+
+    [[1]] <<Support for XML files, typed property files (including lists, numbers, classes, etc), or a combination of both>>
+
+    [[2]] <<Support for multiple environments>> (development, integration, preproduction, production, etc)
+
+    [[3]] <<Support for applications which aggregate several components>>: for example for portlets and portals
+
+    [[4]] <<Support for ASP applications>>: each company/organization serviced by the Application Service Provider my have its own configuration (since v0.9)
+
+    [[5]] <<Provides access to the configuration using JMX (since v0.9)>>
+
+    [[6]] <<Well documented!>>
+
+    [[7]] <<Easy to remember conventions>> instead of configuration to simplify usage
+

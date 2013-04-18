@@ -1,0 +1,41 @@
+Roadmap
+
+Planned features
+
+    <<Planned features for property files>>
+
+    * Reloading (done in version 0.9.0)
+
+    * Properties in database (beta implementation in version 0.9.0)
+
+    * Properties in JNDI (beta implementation in version 0.9.0)
+
+    * New property types: name-value pairs, locale, dates, etc.
+
+    []
+
+    <<Planned features for XML files>>
+
+    The first planned features are to solve the currently known limitations of the support of XML files with respect to the configuration through property files. These are:
+
+    * You can only have one XML file per component
+
+    * There is no complete support for changing XML configuration when aggregating components. Only that offered by variables
+
+    * There is no complete support for changing XML configuration for each differnt environment. Only that offered by variables.
+
+    []
+
+    Other planned features for XML files are:
+
+    * Storage of XML files in a database
+
+    * Reloading (done in version 0.9.0)
+
+    []
+
+    <<Finish the reload configuration service (done in version 0.9.0)>>
+
+    Implement the servlet interface and fix it by including Jakarta Commons Configuration v1.1 when it is released (done in version 0.9.0).
+
+    <<Leverage JMX technology (access and modification of configuration through JMX is already available in version 0.9.0, more will come)>>

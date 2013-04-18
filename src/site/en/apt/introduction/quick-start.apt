@@ -1,0 +1,115 @@
+Introduction to the quick start guide
+
+    This guide shows how to use EasyConf to solve the simplest configuration problem. Its purpose is to get EasyConf running
+    and show how easy it is to use. In the {{{/user-guide/introducion.html}user manual}}, you'll find detailed explanations of
+    all of its {{{/reference/features.html}features}}.
+
+The problem
+
+    You are developing an application and you have to use a value which may change in the future. For example you are developing
+    a calculator and you have to implement a function to convert Euros to Dollars. Currently you know its (for example) 1.2:1 ratio
+    so you hardcode it in a constant:
+
++---------------------------------
+    public static final double EURO_TO_DOLLARS_RATIO = 1.2;
+    public double toDollars(double euros) {
+        return euros/EURO_TO_DOLLARS_RATIO;
+    }
++---------------------------------
+
+    You wish you could make that value configurable so you don't have to recompile when it changes. How would you do it?
+    You could use the Properties class which comes with Java but you'll have to define conventions about where to place
+    the configuration file and which method to use to find it. Furthermore you'll have to deal with the conversion of the
+    value to a double. It's not that much work, but we programmers are lazy.
+
+A simple solution
+
+    Here is how you would do it with EasyConf. First change the above lines with:
+
++------------------------------------
+    public static final double EURO_TO_DOLLARS_RATIO = EasyConf.getConfiguration("calculator").getProperties().getDouble("euro-to-dollars");
+
+    public double toDollars(double euros) {
+        return euros/EURO_TO_DOLLARS_RATIO;
+    }
++------------------------------------
+
+    Then create a file called <<<calculator.properties>>> and place it anywhere that will end up being in the classpath of the application.
+    This file should have the following content:
+
++-----------------------------------
+    euro-to-dollars=1.2
++-----------------------------------
+
+    And that's it!
+
+Explanation
+
+    In this simple case EasyConf provided a few simple conveniences:
+
+    * You don't hardcode the name of a file in your code. You just give a name, calculator which EasyConf will map to
+    a file name <<<calculator.properties>>>. You'll find later that this makes a difference when you later want to use more
+    than one file to configure the calculator.
+
+    * EasyConf will look for the file in {{{/reference/file-search.html}a variety of locations}}. Third the number is automatically converted to a double.
+    If it cannot be converted a ConversionException is thrown.
+
+    * You can read the value in a single line. Yes I know it looks like a complicated line for this simple example,
+    but that makes it possible to add more complex configuration later.
+
+    []
+
+Adding more properties
+
+    Later on, when developing more functionalities of the calculator you find more places where you could take advantage of
+    your newly created configuration file. In this case you need a list of items and a boolean value. With a small refactoring you get:
+
++----------------------------------------
+    public static final double EURO_TO_DOLLARS_RATIO = getProperties().getDouble("euro-to-dollars");
+    public static final String[] SUPPORTED_CURRENCIES = getProperties().getStringArray("supported-currencies");
+    public static final String[] TRUSTED_CURRENCIES = getProperties().getStringArray("trusted-currencies");
+    public static final boolean CONVERSION_ALLOWED = getProperties().getBoolean("conversion-allowed");
+
+    private static ComponentProperties getProperties(double euros) {
+        return Easyconf.getConfiguration("calculator").getProperties();
+    }
++----------------------------------------
+
+    And add the new properties to <<<calculator.properties>>>:
+
++----------------------------------------
+    euro-to-dollars=1.2
+    supported-currencies=${trusted-currencies},pound
+    trusted-currencies=dollar,euro
+    conversion-allowed=true
++----------------------------------------
+
+    This example shows a new feature of EasyConf (inherited from Commons Configuration in fact):
+    the ability to use variables inside the property file. It also shows how handy it is to have automatic conversion of
+    properties to different types. Check the complete list of {{{/reference/property-types.html}supported types}}.
+
+Configuring an application for an ASP)
+
+    An ASP(Application Service Provider) offers applications to several customers from a single installation.
+    In this environment a single running application may need to have different configurations depending on the customer
+    that is accessing the application. EasyConf is prepared to configure applications which are developed to work in this environment.
+
+    In this situation the application must ask EasyConf for the configuration providing both the component name and a company id.
+    The company id will represent the unique customer id which is currently accesing the application:
+
++-----------
+    Easyconf.getConfiguration("companyA", "calculator").getProperties();
++-----------
+
+    When used this way EasyConf allows to have configuration files specific to each company which override the default configuration.
+    To know how to achieve this read the {{{/user-guide/advanced-feature/asp-model.html}ASP model}} section of the documentation.
+
+More functionality
+
+    As your configuration needs grow you'll find other useful features in EasyConf. For example, it is possible to complement or substitute the properties file with an XML file. EasyConf allows any arbitrary XML vocabulary and converts it to Java POJOs (using Digester).
+
+    In the manual you'll also find how EasyConf supports changing the configuration for different environments. For example if you need to use some configuration in the local environment and a different one for the production environment. EasyConf supports an unlimitted number of environments.
+
+    Another interesting feature is to configure a set of components when they are aggregated to form a more complex application. For example if you deploy several portlets which use EasyConf in a portal you can change the default property values of any or all of the portlets in a single property files.
+
+    Follow on by reading the {{{/user-guide/introduction.html}user manual}}.

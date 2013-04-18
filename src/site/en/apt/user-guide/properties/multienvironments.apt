@@ -1,0 +1,57 @@
+Support for multiple environments
+
+    This feature is useful mainly for server applications.
+    This type of applications usually integrate with external systems and the data to connect to them is different depending on the environment
+    in which the application is running.
+    For example, there may be a local development environment, an integration environment, a preproduction environment and of course a production environment.
+
+    EasyConf supports having different properties for each environment. In fact it does so using the features you already know:
+
+    * Inclusion of files
+
+    * Access to system properties
+
+    Let's see an example which shows how to use this features to support multiple environments.
+
+An example
+
+    Let's assume a component called moduleABC.
+    We want to support two environments: development and production.
+    The base configuration properties of this component will be searched for in a file called moduleABC.properties.
+    Some of the properties in this file will have a value which depends on the environment.
+    In the base file default values will be provided. The values specific to the environment will be in other two files:
+
+    * moduleABC.development.properties
+
+    * moduleABC.production.properties
+
+    We could include, for example, the first of this files in the moduleABC.properties file using the include-and-override special property:
+
++---
+    include-and-override=moduleABC.development.properties
++---
+
+    The values of the properties of the included file will override the values of the same properties of the base file (moduleABC.properties).
+    Next, let's do a little change in the previous sentence. Instead of hardcoding the word <development>, we'll use a variable:
+
++---
+    include-and-override=moduleABC.${my-environment}.properties
++---
+
+    The last step is to give a value to this property using a system property. So in the development environment you have to execute the application using:
+
++---
+    java -Dmy-environment=development ...
++---
+
+    In this case the file moduleABC.development.properties will be included and the properties for the development environment will override the default ones.
+    To load the file with the properties for production all you have to do is to execute the application using:
+
++---
+    java -Dmy-environment=production ...
++---
+
+
+
+
+
